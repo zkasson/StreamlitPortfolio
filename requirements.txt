@@ -1,0 +1,8 @@
+streamlit
+geopandas 
+pandas 
+matplotlib
+leafmap
+folium
+gssapi
+arcgis == 2.3.0.1
