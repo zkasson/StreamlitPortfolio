@@ -1,5 +1,4 @@
 import streamlit as st
-from streamlit_navigation_bar import st_navbar
 from streamlit_option_menu import option_menu
 import geopandas as gpd
 import pandas as pd
