@@ -4,5 +4,6 @@ pandas
 matplotlib
 leafmap
 folium
+streamlit_folium
 gssapi
 arcgis == 2.3.0.1
