@@ -315,7 +315,7 @@ elif selected == "Projects":
             list(projects_dict.values()),  
             icons=["code", "map", "map"],
             menu_icon="cast",
-            default_index=st.session_state.selected_project_index,  # Use current for default index
+            default_index=0,  # Use current for default index
             styles={
                 "container": {"background-color": "black"},
                 "icon": {"color": "white"},
