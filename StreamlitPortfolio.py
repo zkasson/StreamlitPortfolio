@@ -302,10 +302,6 @@ elif selected == "Projects":
         2: "Upcoming Projects"
     }
 
-    # Initialize the selected project index in session state
-    if "selected_project_index" not in st.session_state:
-        st.session_state.selected_project_index = 0  # Default to the first project
-
     # Sidebar content
     with st.sidebar:
         st.markdown('''<h1 style='text-align: left; color: grey; font-size: 25px;
@@ -328,10 +324,6 @@ elif selected == "Projects":
                 "nav-link-selected-icon": {"color": "#F9DB6D"},
             }
         )
-
-        # After rendering the option_menu, update the session state with the selected project index
-        if project:
-            st.session_state.selected_project_index = list(projects_dict.values()).index(project)
 
     # Main content based on the selected project
     selected_project = projects_dict[st.session_state.selected_project_index]  # Get the project name based on index
