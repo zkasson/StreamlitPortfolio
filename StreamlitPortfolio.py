@@ -302,6 +302,8 @@ elif selected == "Projects":
         2: "Upcoming Projects"
     }
 
+ 
+
     # Sidebar content
     with st.sidebar:
         st.markdown('''<h1 style='text-align: left; color: grey; font-size: 25px;
@@ -315,7 +317,7 @@ elif selected == "Projects":
             list(projects_dict.values()),  
             icons=["code", "map", "map"],
             menu_icon="cast",
-            default_index=0,  # Use current for default index
+            default_index=st.session_state.selected_project_index,  # Use current for default index
             styles={
                 "container": {"background-color": "black"},
                 "icon": {"color": "white"},
@@ -326,21 +328,32 @@ elif selected == "Projects":
         )
 
 
-
-    st.title(selected_project)
+        
     # # # Website # # #
     # # # Project # # #
     if project == "Website":
+        st.markdown(f'''<h1 style='text-align: center; color: grey; font-size: 45px;
+                letter-spacing: .5rem; margin-bottom: 5px; padding-bottom: 0px;'>{project}</h1>'''
+                , unsafe_allow_html=True)
         website_desc = "I built this website from scratch, writing well over 1,000 lines of code to bring it to life. It incorporates numerous Python libraries, including streamlit, geopandas, pandas, matplotlib, matplotlib.pyplot, leafmap, folium, and arcgis, to name a few."
         website_desc2 = "Additionally, I’ve incorporated JavaScript, CSS, and HTML to enhance functionality and design. This project showcases my ability to code and integrate spatial concepts, such as spatial joins and visualizations, into a user-friendly interface."
+        website_desc3 = "You can take a look at the GitHub repository for the code"
         st.markdown(
-            f"<div style='text-align: left; color: grey; margin: 0 auto; margin-top: 40px; max-width: 1200px; margin-bottom: 20px; font-size: 26px; font-family: 'Roboto', sans-serif;'>{website_desc}<br><br>{website_desc2}</div>",
+            f"""
+            <div style='text-align: left; color: grey; margin: 0 auto; margin-top: 40px; max-width: 1200px; margin-bottom: 20px; font-size: 26px; font-family: "Roboto", sans-serif;'>
+                {website_desc}<br><br>
+                {website_desc2}<br><br>
+                {website_desc3} <a href='https://github.com/zkasson/StreamlitPortfolio/tree/main' style='color: blue; text-decoration: none;'>here</a>
+            </div>
+            """,
             unsafe_allow_html=True
-        )
+            )
     # # # Wildfire # # #
     # # # Project # # #
     elif project == "WildFire Dashboard":
-
+        st.markdown(f'''<h1 style='text-align: center; color: grey; font-size: 45px; 
+                letter-spacing: .5rem; margin-bottom: 5px; padding-bottom: 0px; padding-right: 250px;'>{project}</h1>'''
+                , unsafe_allow_html=True)
         # # # Set Up SideBar Selection # # #
         with st.sidebar:
             area_option = ["Canadian Wildfires","US Wildfires"]
@@ -862,12 +875,14 @@ elif selected == "Projects":
             st.components.v1.html(map._repr_html_(), height=1200,width = 1200)
         
     elif project == "Upcoming Projects":
+        st.markdown(f'''<h1 style='text-align: center; color: grey; font-size: 45px;
+                letter-spacing: .5rem; margin-bottom: 5px; padding-bottom: 0px;'>{project}</h1>'''
+                , unsafe_allow_html=True)
         upcoming = "I have many more examples of my work, and I’m in the process of slowly adding them to my current portfolio. In the meantime, feel free to head over to my old portfolio to explore additional examples of my work. https://zackkasson.wixsite.com/portfolio/portfolio"
         st.markdown(
             f"<div style='text-align: left; color: grey; margin: 0 auto; margin-top: 40px; max-width: 1200px; margin-bottom: 20px; font-size: 26px; font-family: 'Roboto', sans-serif;'>{upcoming}</div>",
             unsafe_allow_html=True
         )
-
                     
 
 
