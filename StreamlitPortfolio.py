@@ -325,8 +325,7 @@ elif selected == "Projects":
             }
         )
 
-    # Main content based on the selected project
-    selected_project = projects_dict[st.session_state.selected_project_index]  # Get the project name based on index
+
 
     st.title(selected_project)
     # # # Website # # #
