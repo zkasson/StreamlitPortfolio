@@ -14,7 +14,7 @@ from streamlit_folium import st_folium
 gis = GIS()
 
 # Set up main configuration 
-st.set_page_config(page_title='Test Nav Bar', layout='wide')
+st.set_page_config(page_title='Zack Kasson - Portfolio', layout='wide')
 
 # hide_decoration_bar_style = '''
 #     <style>
