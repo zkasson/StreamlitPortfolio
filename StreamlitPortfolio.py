@@ -335,7 +335,7 @@ elif selected == "Projects":
         st.markdown(f'''<h1 style='text-align: center; color: grey; font-size: 45px;
                 letter-spacing: .5rem; margin-bottom: 5px; padding-bottom: 0px;'>{project}</h1>'''
                 , unsafe_allow_html=True)
-        website_desc = "I built this website from scratch, writing over 1,000 lines of code to bring it to life. It incorporates numerous Python libraries, including streamlit, geopandas, pandas, matplotlib, matplotlib.pyplot, leafmap, folium, and arcgis, to name a few."
+        website_desc = "I built this website from scratch, writing about 1,000 lines of code to bring it to life. It incorporates numerous Python libraries, including streamlit, geopandas, pandas, matplotlib, matplotlib.pyplot, leafmap, folium, and arcgis, to name a few."
         website_desc2 = "Additionally, I’ve incorporated JavaScript, CSS, and HTML to enhance functionality and design. This project showcases my ability to code and integrate spatial concepts, such as spatial joins and visualizations, into a user-friendly interface."
         website_desc3 = "You can take a look at the GitHub repository for the code"
         st.markdown(
