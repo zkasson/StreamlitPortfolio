@@ -227,7 +227,7 @@ elif selected == "Spatial CV":
             )
             st.write(' ')
             st.markdown(
-                f"<div style='text-align: left; color: grey; margin: 0 auto; max-width: 700px;font-size: 26px; font-family: 'Roboto', sans-serif;'>{current_location_exp}</div>",
+                f"<div style='text-align: left; color: grey; margin: 0 auto; max-width: 700px;font-size: 26px; font-family: 'Roboto', sans-serif;'>I learned {current_location_exp}</div>",
                 unsafe_allow_html=True
             )
         
