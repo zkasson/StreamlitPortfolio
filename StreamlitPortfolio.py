@@ -299,7 +299,12 @@ elif selected == "Projects":
     projects_dict = {
         0: "Website",
         1: "WildFire Dashboard",
-        2: "Upcoming Projects"
+        2: "Python Map",
+        3: "Python Vizualization",
+        4: "Open Source Surface Model",
+        5: "ESRI Dashboard",
+        6: "Web Developement",
+        7: "Upcoming Projects"
     }
 
  
@@ -315,9 +320,9 @@ elif selected == "Projects":
         project = option_menu(
             None,
             list(projects_dict.values()),  
-            icons=["code", "map", "map"],
+            icons=["code", "map", "map", "code","map", "map", "code", "code"],
             menu_icon="cast",
-            default_index=0,  
+            default_index=0,  # Use current for default index
             styles={
                 "container": {"background-color": "black"},
                 "icon": {"color": "white"},
@@ -335,7 +340,7 @@ elif selected == "Projects":
         st.markdown(f'''<h1 style='text-align: center; color: grey; font-size: 45px;
                 letter-spacing: .5rem; margin-bottom: 5px; padding-bottom: 0px;'>{project}</h1>'''
                 , unsafe_allow_html=True)
-        website_desc = "I built this website, writing about 1,000 lines of code to bring it to life. It incorporates numerous Python libraries, including streamlit, geopandas, pandas, matplotlib, matplotlib.pyplot, leafmap, folium, and arcgis, to name a few."
+        website_desc = "I built this website from scratch, writing over 1,000 lines of code to bring it to life. It incorporates numerous Python libraries, including streamlit, geopandas, pandas, matplotlib, matplotlib.pyplot, leafmap, folium, and arcgis, to name a few."
         website_desc2 = "Additionally, I’ve incorporated JavaScript, CSS, and HTML to enhance functionality and design. This project showcases my ability to code and integrate spatial concepts, such as spatial joins and visualizations, into a user-friendly interface."
         website_desc3 = "You can take a look at the GitHub repository for the code"
         st.markdown(
@@ -873,19 +878,404 @@ elif selected == "Projects":
                 ).add_to(map)
             # Render the map in Streamlit
             st.components.v1.html(map._repr_html_(), height=1200,width = 1200)
+
+    # # # Amazon Map# # # #
+    # # # Project # # #
+    elif project =="Python Map":
+        st.markdown(f'''<h1 style='text-align: center; color: grey; font-size: 45px; 
+                letter-spacing: .5rem; margin-bottom: 5px; padding-bottom: 40px;'>Python Map Project</h1>'''
+                , unsafe_allow_html=True)
+        options = ["Map", "Code"]
+
+        amazon_map = st.sidebar.segmented_control("Selection:", options, selection_mode="single")
         
+        code = """
+# Set Up
+import geopandas as gpd
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+import os
+import requests
+import zipfile
+data_folder = 'data'
+output_folder = 'output'
+
+# Create Folder for data and output if they do not already exist
+if not os.path.exists(data_folder):
+    os.mkdir(data_folder)
+if not os.path.exists(output_folder):
+    os.mkdir(output_folder)
+
+# Define a function to download data from a URL
+def download(url):
+    filename = os.path.join(data_folder, os.path.basename(url))
+    if not os.path.exists(filename):
+        with requests.get(url, stream=True, allow_redirects=True) as r:
+            with open(filename, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=8192):
+                    f.write(chunk)
+        print('Downloaded', filename)
+
+# URLs and files for downloading
+data_url = 'https://github.com/spatialthoughts/python-dataviz-web/releases/download/'
+hydrorivers_file = 'hydrorivers_100.gpkg'
+hydrorivers_url = data_url + 'hydrosheds/'
+countries_file = 'ne_10m_admin_0_countries_ind.zip'
+countries_url = data_url + 'naturalearth/'
+download(hydrorivers_url + hydrorivers_file)
+download(countries_url + countries_file)
+
+# Create gdf of the countries and filter to only India
+countries_filepath = os.path.join(data_folder, countries_file)
+country_gdf = gpd.read_file(countries_filepath)
+country = 'Brazil'
+selected_country = country_gdf[(country_gdf['SOVEREIGNT'] == country)&(country_gdf['TYPE'] != 'Dependency')]
+
+# Create gdf of river network while also clipping it to the shap of India
+hydrorivers_filepath = os.path.join(data_folder, hydrorivers_file)
+river_gdf = gpd.read_file(hydrorivers_filepath, mask=selected_country)
+river_gdf.head(4)
+
+# Create a width scale based on upland area
+original_min = 10
+original_max = 4000
+target_min = 0.1
+target_max = 0.9
+scaled = (river_gdf['UPLAND_SKM'] - original_min) / (original_max - original_min)
+river_gdf['width'] = scaled.clip(0, 1) * (target_max - target_min) + target_min
+river_gdf_final = river_gdf.sort_values(['UPLAND_SKM', 'width'])[
+    ['MAIN_RIV', 'UPLAND_SKM', 'width', 'geometry']]
+river_gdf_final.head(4)
+
+fig, ax = plt.subplots(figsize=(10, 10))
+title = f'Rivers of {country}'
+
+river_gdf_final.plot(ax=ax,column='MAIN_RIV',categorical=True, linewidth=river_gdf_final['width'])
+fig.set_facecolor((0,0,0))
+ax.set_title(title, color='white', fontsize=30)
+ax.set_axis_off()
+output_path = os.path.join(output_folder, 'RiversOfBrazil.jpg')
+plt.savefig(output_path, dpi=300)
+plt.show()
+"""
+        if amazon_map == "Code":
+            st.code(code, language="python")
+        else:
+            st.markdown("<img src='https://github.com/zkasson/StreamlitPortfolio/blob/main/RiversOfBrazil.jpg?raw=true' width='700' style='display: block; margin: 0 auto; border-radius: 20px;'>" , unsafe_allow_html=True)
+        
+    # # # Python Vizualization # # #
+    # # # PROJECT # # #       
+    elif project == "Python Vizualization":   
+        st.markdown(f'''<h1 style='text-align: center; color: grey; font-size: 45px; 
+                letter-spacing: .5rem; margin-bottom: 5px; padding-bottom: 40px;'>Matplotlib Project</h1>'''
+                , unsafe_allow_html=True)
+        options = ["Map", "Code"]
+
+        python_viz_option = st.sidebar.segmented_control("Selection:", options, selection_mode="single")
+        
+        code = """
+# Set Up
+from google.colab import drive
+import pandas as pds
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+import matplotlib.colors as mcolors
+import colorcet as cc
+import os
+
+data_folder = 'data'
+output_folder = 'output'
+
+if not os.path.exists(data_folder):
+    os.mkdir(data_folder)
+if not os.path.exists(output_folder):
+    os.mkdir(output_folder)
+
+# Download data
+drive.mount('/content/drive')
+df = pds.read_excel('/content/drive/My Drive/Colab Notebooks/Portfolio/US_Temp_Data.xlsx')
+df.head(4)
+
+# Create function to convert Celsius to Fahrenheit
+def celsius_to_fahr(temp_celsius):
+    return 9/5 * temp_celsius + 32
+
+# Create a dictionary and a lambda function in order to reformat data in the format: YEARMO
+months = {'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04',
+          'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08',
+          'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'}
+
+to_date = lambda x: x.pop('Year').astype(str) + x.pop('Month').map(months)
+
+# Melt data from long table to tall table
+data = (df.melt(id_vars='Year', var_name='Month', value_name='Temp').assign(Date=to_date).set_index('Date').sort_index().reset_index())
+
+# Format the data to make seperate column for the Month and Year
+data["Year"] = data["Date"].str.slice(start=0,stop=4).astype(int)
+data["Month"] = data["Date"].str.slice(start=4,stop=6).astype(int)
+data = data.reindex(columns=['Year', 'Month', 'Temp'])
+
+#  convert temperatures from Celsius to Fahrenheit
+data['Temp'] = round(celsius_to_fahr(data["Temp"]),1)
+data.head(4)
+
+# # Create variable for yearly average
+yearly_data = round(data.groupby("Year").mean().sort_values("Year", ascending = True),2)
+yearly_data = yearly_data.rename(columns={'Temp':'Yearly_Temp'})
+yearly_data = yearly_data.drop('Month', axis=1)
+# # # # Create variable for monthly average across all years
+# monthly_temps = round(data.groupby("Month").mean().sort_values("Month", ascending = True),2)
+# monthly_temps = monthly_temps.rename(columns={'Temp':'Monthly_Avg'})
+yearly_data
+
+# Create a figure represetning the change in yearly temperature average
+fig, ax1 = plt.subplots(1,1, figsize=(15,15))
+fig.patch.set_facecolor('black')
+ax1.set_facecolor('black')
+y = yearly_data["Yearly_Temp"]
+x = yearly_data.index.values
+myLocator = mticker.MultipleLocator(5)
+ax1.xaxis.set_major_locator(myLocator)
+
+
+# Normalize data for color mapping
+norm = plt.Normalize(y.min(), y.max())
+# Use the 'fire' colormap from colorcet
+cmap = cc.cm.bkr
+
+# Plot with color-changing line
+for i in range(len(x) - 1):
+    ax1.plot(x[i:i+2], y.iloc[i:i+2], color=cmap(norm(y.iloc[i + 1])), linewidth=5)
+
+ax1.set_xlabel('Year', fontsize=20, color='white')
+ax1.set_ylabel('Temperature (°F)', fontsize=20, color='white')
+ax1.set_title('Global Yearly Temperature Average from 1901 to 2021', fontsize=24, color='white')
+for label in ax1.xaxis.get_ticklabels():
+    label.set_rotation(45)
+    label.set_color('white')
+    label.set_fontsize(14)
+for label in ax1.yaxis.get_ticklabels():
+    label.set_color('white')
+    label.set_fontsize(14)
+ax1.grid(True,alpha=0.3)
+output_path = os.path.join(output_folder, 'YearlyTemp.png')
+plt.savefig(output_path,dpi=100)
+"""
+        if python_viz_option == "Code":
+            st.code(code, language="python")
+        else:
+            st.markdown("<img src='https://github.com/zkasson/StreamlitPortfolio/blob/main/YearlyTemp.png?raw=true' width='700' style='display: block; margin: 0 auto; border-radius: 20px;'>" , unsafe_allow_html=True)
+    
+    # # # Surface Model # # #
+    # # # PROJECT # # #
+    elif project == "Open Source Surface Model": 
+        st.markdown(f'''<h1 style='text-align: center; color: grey; font-size: 45px; 
+                letter-spacing: .5rem; margin-bottom: 5px; padding-bottom: 40px;'>Rasterio Project</h1>'''
+                , unsafe_allow_html=True)
+        options = ["Map", "Code"]
+
+        surface_model_option = st.sidebar.segmented_control("Selection:", options, selection_mode="single")
+        
+        code = """
+# Set Up
+import os
+import rioxarray as rxr
+from rioxarray.merge import merge_arrays
+import matplotlib.pyplot as plt
+data_folder = 'data'
+output_folder = 'output'
+#Create Folder for data and output if they do not already exist
+if not os.path.exists(data_folder):
+    os.mkdir(data_folder)
+if not os.path.exists(output_folder):
+    os.mkdir(output_folder)
+# Define a function to download data from a URL using
+def download(url):
+    filename = os.path.join(data_folder, os.path.basename(url))
+    if not os.path.exists(filename):
+        from urllib.request import urlretrieve
+        local, _ = urlretrieve(url, filename)
+        print('Downloaded ' + local)
+srtm_tiles = [
+  'N27E086.hgt',
+  'N27E087.hgt',
+  'N28E086.hgt',
+  'N28E087.hgt'
+]
+data_url = 'https://github.com/spatialthoughts/python-dataviz-web/releases/' \
+  'download/srtm/'
+for tile in srtm_tiles:
+  url = '{}/{}'.format(data_url, tile)
+  download(url)
+
+  # Use Rasterio to connect to elevation data
+datasets = []
+for tile in srtm_tiles:
+    path = os.path.join(data_folder, tile)
+    rds = rxr.open_rasterio(path)
+    # connect to first band
+    band = rds.sel(band=1)
+    datasets.append(band)
+
+# Plot 4 DEMs
+fig, axes = plt.subplots(1, 4)
+fig.set_size_inches(15,3)
+for index, ax in enumerate(axes.flat):
+    da = datasets[index]
+    im = da.plot.imshow(ax=ax, cmap='viridis')
+    filename = srtm_tiles[index]
+    ax.set_title(filename)
+    ax.set_aspect('equal') # maintain aspect ratio
+
+plt.tight_layout()
+plt.show()
+
+# # # We want to be able to view as a merged DEM # # #
+merged = merge_arrays(datasets, method='first')
+# Find the maximum point within the DEM
+max_da = merged.where(merged==merged.max(), drop=True).squeeze()
+# Assign coordinates and height to variables
+max_x = max_da.x.values
+max_y = max_da.y.values
+max_elev = int(max_da.values)
+print(f'Mt. Everest is located at {max_x.round(6)} E, {max_y.round(6)} N and is {max_elev} meters above sea level.')
+"""
+        code1 = """
+# Plot DEM with annotation of Mt. Everests location
+fig, ax = plt.subplots(1, 1)
+fig.set_size_inches(12, 10)
+merged.plot.imshow(ax=ax, cmap='inferno', add_labels=False)
+ax.plot(max_x, max_y, '^k', markersize=11)
+ax.annotate('Mt. Everest (elevation:{}m)'.format(max_elev),
+            xy=(max_x, max_y), xycoords='data',
+            xytext=(10, 0), textcoords='offset points',
+            arrowprops=None,
+            zorder=10
+            )
+CS = ax.contour(merged.x, merged.y, merged.values, levels=10, colors='gray', linewidths=0.5,zorder=1)
+plt.tight_layout()
+output_path = os.path.join(output_folder, 'DEM_MtEverest.jpg')
+plt.savefig(output_path, dpi=300)
+plt.show()
+"""
+        code_return = "Mt. Everest is located at 86.925556 E, 27.988889 N and is 8748 meters above sea level."
+        if surface_model_option == "Code":
+            st.code(code, language="python")
+            st.markdown(
+            f"<div style='text-align: left; color: grey; margin: 0 auto; margin-top: 5px; max-width: 1200px; margin-bottom: 20px; font-size: 26px; font-family: 'Roboto', sans-serif;'>{code_return}</div>",
+            unsafe_allow_html=True
+        )
+            st.code(code1, language="python")
+        else:
+            st.markdown("<img src='https://github.com/zkasson/StreamlitPortfolio/blob/main/DEM_MtEverest.jpg?raw=true' width='1000' style='display: block; margin: 0 auto; border-radius: 20px;'>" , unsafe_allow_html=True) 
+    
+    
+    # # # ESRI Dashboard # # #
+    # # # PROJECT # # #
+    elif project == "ESRI Dashboard": 
+        st.markdown(f'''<h1 style='text-align: center; color: grey; font-size: 45px; 
+                letter-spacing: .5rem; margin-bottom: 5px; padding-bottom: 10px;'>ESRI Dashboard Project</h1>'''
+                , unsafe_allow_html=True)
+        options = ["Map", "Code"]
+
+        esri_dashboard_option = st.sidebar.segmented_control("Selection:", options, selection_mode="single")
+        
+        code = """
+//StateName
+var stateName = $feature.STATE_NAME;
+
+// Intersect
+var droughtInState = Intersects($feature, FeatureSetByName($map, 'Drought Assignment - ZK'));
+
+// Check if any droughts intersect the state
+if (Count(droughtInState) == 0) {
+    return 'There are no droughts in the state of ' + stateName + '.';
+} else {
+    // Count the number of droughts in the state
+    var droughtCount = Count(droughtInState);
+    return 'There are ' + Text(droughtCount) + ' droughts in the state of ' + stateName + '.';
+}
+
+
+
+// Access Layer
+var droughtLayer = FeatureSetByPortalItem("6aa5cf1992554a8b856b44d22d302b47", 0);
+// Create Counter
+var totalAcresBySeverity = {
+    Mild: 0,
+    Moderate: 0,
+    Severe: 0,
+    Extreme: 0
+};
+// loop through drought points
+for (var drought in droughtLayer) {
+    // Check if the drought geometry is ongoing
+    if (Lower(Trim(drought.ongoing)) == "yes") {
+        var severity = Lower(Trim(drought.severity));
+        var landArea = drought.land_area;
+
+        // Use HasValue to check if severity = drought.severity then add to the count 
+        if (HasValue(totalAcresBySeverity, severity)) {
+            totalAcresBySeverity[severity] += landArea;
+        }
+    }
+}
+
+// Create an array of dictionaries for featureSet
+var features = [];
+
+// Push dictionary to features. include severity
+for (var severity in totalAcresBySeverity) {
+    Push(features, {
+        attributes: {
+            Severity: severity,
+            TotalDroughtAcres: totalAcresBySeverity[severity]
+        }
+    });
+}
+
+// Define featureSet schema
+var resultFeatureSet = {
+    fields: [
+        { name: "Severity", type: "esriFieldTypeString", alias: "Severity" },
+        { name: "TotalDroughtAcres", type: "esriFieldTypeDouble", alias: "Total Drought Acres" }
+    ],
+    geometryType: "",
+    features: features
+};
+
+// Return featureSet
+return FeatureSet(resultFeatureSet);
+"""
+        esri_dashboard_background = "This is some of the Arcade code I used for the dashboard:"
+        if esri_dashboard_option == "Code":
+            st.markdown(
+            f"<div style='text-align: center; color: grey; margin: 0 auto; margin-top: 0px; max-width: 1200px; margin-bottom: 20px; font-size: 26px; font-family: 'Roboto', sans-serif;'>{esri_dashboard_background}</div>",
+            unsafe_allow_html=True)
+            st.code(code, language="python")
+            
+        else:
+            st.markdown("<img src='https://github.com/zkasson/StreamlitPortfolio/blob/main/EsriDashboard.png?raw=true' width='1200' style='display: block; margin: 0 auto; border-radius: 20px;'>" , unsafe_allow_html=True) 
+    
+    # # # WEB DEV # # #
+    # # # PROJECT # # #
+    elif project == "Web Developement":  
+        web_dev_background = "I developed a full-stack web application using Next.js for the frontend, leveraging its server-side rendering (SSR) and static site generation (SSG) capabilities to enhance performance and SEO. I integrated an interactive map using the ArcGIS API SDK, enabling advanced geospatial visualization and data rendering. The backend is built with Node.js, where I designed and implemented RESTful APIs for efficient data retrieval and manipulation. For data storage, I utilized MongoDB, ensuring a scalable and flexible NoSQL database solution."
+        st.markdown("<img src='https://github.com/zkasson/StreamlitPortfolio/blob/main/CartoTick.jpg?raw=true' width='1100' style='display: block; margin: 0 auto; border-radius: 20px;'>" , unsafe_allow_html=True) 
+        st.markdown(
+            f"<div style='text-align: center; color: grey; margin: 0 auto; margin-top: 0px; max-width: 1100px; margin-bottom: 20px; font-size: 26px; font-family: 'Roboto', sans-serif;'>{web_dev_background}</div>",
+            unsafe_allow_html=True
+        )
+    
     elif project == "Upcoming Projects":
         st.markdown(f'''<h1 style='text-align: center; color: grey; font-size: 45px;
                 letter-spacing: .5rem; margin-bottom: 5px; padding-bottom: 0px;'>{project}</h1>'''
                 , unsafe_allow_html=True)
-        upcoming = "I have many more examples of my work, and I’m in the process of slowly adding them to my current portfolio. In the meantime, feel free to head over to my old portfolio to explore additional examples of my work. https://zackkasson.wixsite.com/portfolio/portfolio"
+        upcoming = "I have many more examples of my work, and I’m in the process of slowly adding them to my current portfolio. In the meantime, ENJOY!"
         st.markdown(
             f"<div style='text-align: left; color: grey; margin: 0 auto; margin-top: 40px; max-width: 1200px; margin-bottom: 20px; font-size: 26px; font-family: 'Roboto', sans-serif;'>{upcoming}</div>",
             unsafe_allow_html=True
         )
-                    
-
-
 
 
 
